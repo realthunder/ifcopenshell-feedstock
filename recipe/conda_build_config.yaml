@@ -1,0 +1,14 @@
+zlib:
+- 1.2
+
+vtk_base:
+- 9.2.6
+
+libboost_devel:
+- 1.84
+
+channel_sources:
+- realthunder, freecad, conda-forge, defaults
+
+channel_targets:
+- realthunder main
