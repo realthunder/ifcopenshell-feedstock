@@ -16,7 +16,7 @@ jobs:
   build:
     name: ${{ matrix.CONFIG }}
     runs-on: ${{ matrix.runs_on }}
-    timeout-minutes: 360
+    timeout-minutes: 600
     strategy:
       fail-fast: false
       matrix:
@@ -31,7 +31,7 @@ jobs:
             os: ubuntu
             runs_on: ['ubuntu-latest']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-aarch64
-          - CONFIG: osx_64_python3.10.____cpython
+          - CONFIG: osx_64_python3.11.____cpython
             UPLOAD_PACKAGES: True
             os: macos
             runs_on: ['macos-13']
