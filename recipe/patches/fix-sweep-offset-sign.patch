@@ -1,0 +1,38 @@
+From c559ee0015cb06895fb6cf34929d570f81cb3bb1 Mon Sep 17 00:00:00 2001
+From: Tiago Azevedo
+Date: Fri, 29 May 2026 00:00:00 +0000
+Subject: [PATCH] Fix sign of temporary offset restore in sweep_along_curve
+
+Backport of upstream c559ee0015cb06895fb6cf34929d570f81cb3bb1, which landed
+after the 0.8.5 release and is not carried by conda-forge.
+
+The temporary-offset workaround subtracts the directrix centroid so the
+sweep is built near the origin, then must add it back. The restore negated
+the sign, placing the swept solid at -mean -- mirrored through the origin.
+Only bites geometry far from the origin.
+
+0.8.5 ships this bug AND the test that catches it: test_pipe_12d expects
+min (288.98, 582.05, 118.71) and unpatched 0.8.5 gives (-290.18, -583.05,
+-119.06). Verified independent of OCCT version and of the OCCT 8
+compatibility patch -- unpatched 0.8.5 on OCCT 7.7.2 reproduces the
+identical wrong numbers, and with this one line it produces the expected
+ones exactly.
+
+Drop this patch once a release containing the upstream fix is used.
+---
+diff --git a/src/ifcgeom/kernels/opencascade/sweep_along_curve.cpp b/src/ifcgeom/kernels/opencascade/sweep_along_curve.cpp
+--- a/src/ifcgeom/kernels/opencascade/sweep_along_curve.cpp
++++ b/src/ifcgeom/kernels/opencascade/sweep_along_curve.cpp
+@@ -301,7 +301,11 @@
+ 
+ 	if (applied_temporary_offset) {
+         gp_Trsf trsf;
+-        trsf.SetTranslation(gp_Vec(-mean.x(), -mean.y(), -mean.z()));
++        // Restore original position: add back the mean subtracted from the
++        // directrix points above. Previously negated, which placed the swept
++        // solid at -mean instead of its original location for geometry far
++        // from the origin.
++        trsf.SetTranslation(gp_Vec(mean.x(), mean.y(), mean.z()));
+         result.Move(trsf);
+     }
+ 
