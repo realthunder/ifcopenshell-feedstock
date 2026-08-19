@@ -12,7 +12,20 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
 fi
 
 
+# CMAKE_POLICY_VERSION_MINIMUM=3.5: the vendored svgfill source declares a
+# cmake_minimum_required below 3.5, which CMake 4 refuses outright. Setting
+# the policy floor is what CMake itself suggests; pinning cmake <4 instead
+# would drag the whole toolchain back to the 2024 stack this recipe just
+# stopped depending on.
+# IFCXML_SUPPORT=OFF because upstream master deleted ifcXML support outright,
+# so OFF is where the project is going. It does NOT drop libxml2: the vendored
+# svgfill links it independently of this switch, so libxml2-devel stays in the
+# host deps (`libxml2` itself is now only the CLI tools after the split).
+# NB: comments cannot go INSIDE the backslash-continued cmake call below --
+# a comment line ends the continuation, and cmake then runs with no source
+# directory at all.
 cmake ${CMAKE_ARGS} -G Ninja \
+ -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
  -DSCHEMA_VERSIONS="2x3;4;4x1;4x3_add2" \
  -DCMAKE_BUILD_TYPE=Release \
  -DCMAKE_INSTALL_PREFIX=$PREFIX \
@@ -34,10 +47,6 @@ cmake ${CMAKE_ARGS} -G Ninja \
  -DEIGEN_DIR:FILEPATH=$PREFIX/include/eigen3 \
  -DCOLLADA_SUPPORT:BOOL=OFF \
  -DBUILD_EXAMPLES:BOOL=OFF \
- # ifcXML is the only consumer of libxml2, and conda-forge split that package:
- # libxml2 is now the CLI tools, the headers moved to libxml2-devel. Upstream
- # master deleted ifcXML support outright, so OFF matches where the project is
- # going and drops the dependency instead of chasing the split.
  -DIFCXML_SUPPORT:BOOL=OFF \
  -DGLTF_SUPPORT:BOOL=ON \
  -DBUILD_CONVERT:BOOL=ON \
@@ -48,6 +57,11 @@ cmake ${CMAKE_ARGS} -G Ninja \
  -DCITYJSON_SUPPORT:BOOL=OFF \
  ./cmake
 
-ninja
+# -j ${CPU_COUNT}: bare `ninja` uses cores+2, and the generated Ifc*-schema.cpp
+# translation units are memory-hungry enough that 18 of them at once exhaust a
+# 30GB box. gcc does not report that as an out-of-memory error -- it dies with
+# "internal compiler error: Segmentation fault", which reads like a compiler
+# bug in a generated file.
+ninja -j ${CPU_COUNT:-4}
 
 ninja install -j 1

@@ -1,9 +1,8 @@
-zlib:
-- 1.2
-
-vtk_base:
-- 9.2.6
-
+# zlib 1.2 and vtk_base 9.2.6 were pinned when this feedstock was last
+# rendered (conda-forge-pinning 2024.10). They are dropped rather than
+# bumped: an occt built today needs libzlib 1.3, and holding 1.2 dragged
+# the whole solve back to a 2024 python build to satisfy it. vtk is not
+# used at all now that occt is the novtk variant.
 libboost_devel:
 - 1.84
 

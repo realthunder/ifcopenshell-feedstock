@@ -10,12 +10,6 @@ cxx_compiler:
 - vs2019
 gmp:
 - '6'
-hdf5:
-- 1.14.3
-libboost_devel:
-- '1.84'
-libxml2:
-- '2'
 mpfr:
 - '4'
 occt:
@@ -31,5 +25,3 @@ target_platform:
 zip_keys:
 - - python
   - channel_sources
-zlib:
-- '1.2'
