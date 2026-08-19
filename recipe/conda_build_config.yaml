@@ -1,0 +1,16 @@
+# Deltas of the realthunder fork against the conda-forge feedstock.
+#
+# occt: the fork's OCCT is 8.0.1, not the 8.0.0 conda-forge pins. The ABI
+# audit found realthunder/OCCT LinkVibe-801 compatible with upstream V8_0_1
+# across everything ifcopenshell touches, so a stock build links the occt
+# 8.0.1 package and runs against the fork. Note that strict channel priority
+# makes an occt in the realthunder channel shadow conda-forge's entirely, so
+# 8.0.1 has to be published there for this to resolve at all.
+occt:
+- 8.0.1
+
+channel_sources:
+- realthunder, conda-forge
+
+channel_targets:
+- realthunder main

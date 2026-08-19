@@ -3,9 +3,9 @@ c_compiler:
 c_stdlib:
 - vs
 channel_sources:
-- conda-forge
+- realthunder, conda-forge
 channel_targets:
-- conda-forge main
+- realthunder main
 cxx_compiler:
 - vs2022
 gmp:
@@ -19,7 +19,7 @@ libxml2_devel:
 mpfr:
 - '4'
 occt:
-- 8.0.0
+- 8.0.1
 pin_run_as_build:
   python:
     min_pin: x.x
