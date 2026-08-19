@@ -7,6 +7,13 @@ vtk_base:
 libboost_devel:
 - 1.84
 
+# Our OCCT fork is 8.0.1 and the ABI audit found it compatible with upstream
+# V8_0_1 for everything ifcopenshell touches, so the stock build links against
+# conda-forge occt 8.0.1 and runs against the fork. Pinned here because the
+# conda-forge global pinning decides occt otherwise.
+occt:
+- 8.0.1
+
 channel_sources:
 - realthunder, freecad, conda-forge, defaults
 

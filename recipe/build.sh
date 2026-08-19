@@ -34,7 +34,11 @@ cmake ${CMAKE_ARGS} -G Ninja \
  -DEIGEN_DIR:FILEPATH=$PREFIX/include/eigen3 \
  -DCOLLADA_SUPPORT:BOOL=OFF \
  -DBUILD_EXAMPLES:BOOL=OFF \
- -DIFCXML_SUPPORT:BOOL=ON \
+ # ifcXML is the only consumer of libxml2, and conda-forge split that package:
+ # libxml2 is now the CLI tools, the headers moved to libxml2-devel. Upstream
+ # master deleted ifcXML support outright, so OFF matches where the project is
+ # going and drops the dependency instead of chasing the split.
+ -DIFCXML_SUPPORT:BOOL=OFF \
  -DGLTF_SUPPORT:BOOL=ON \
  -DBUILD_CONVERT:BOOL=ON \
  -DBUILD_IFCPYTHON:BOOL=ON \
