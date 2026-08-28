@@ -6,8 +6,8 @@ context:
   # development branch, not 0.8.x), so ifcopenshell.version and the
   # package version agree.
   version: "0.9.0alpha0"
-  fork_rev: 3d8b634b4554b247612cd8f94b27cdfb40377fc7
-  build: 2
+  fork_rev: 1935f77b7e30f4a478ea3da2f2d31aebd74dd1c3
+  build: 3
   python_min: "3.10"
 
 recipe:
@@ -24,15 +24,16 @@ source:
   # CMP0167 left alone. They stay in recipe/patches for the 0.8.5
   # source they were written for.
   #
-  # The zstd target fix now lives in the fork itself, along with two
-  # more the first packaged builds turned up: libarea's public header
+  # Three fixes the packaged builds turned up now live in the fork
+  # itself, verified present in this exact tarball rather than assumed:
+  # zstd linked through whichever target the config exports, and libarea's public header
   # defines NONE (and PI, CW, LINEAR...), which made rocksdb's
   # "NONE = 0" enumerator read as "0 = 0" as soon as the build found
   # libarea, and the SWIG interface called Python 2's PyInt_AsLong /
   # PyInt_FromLong, which current SWIG no longer papers over. Neither
   # is packaging-specific, so neither belongs in a patch here.
   - url: https://github.com/realthunder/IfcOpenShell/archive/${{ fork_rev }}.tar.gz
-    sha256: 7759075f58d70124bb0efe7cb79ce18ef7bfc2e713849299b0bc260774b0695c
+    sha256: 104407d39504f6be8e76f4d8f0aced146442b305f05275b4c4a36dc7929d9d4a
 
   - url: https://github.com/IfcOpenShell/files/archive/20a17fcf3b1be2bc48af0273f7604af5b7cc4068.tar.gz
     target_directory: test/input
