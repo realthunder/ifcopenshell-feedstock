@@ -1,6 +1,13 @@
 context:
-  version: "0.8.5"
-  build: 6
+  # The realthunder fork, not an upstream release: it carries the
+  # material layer-set slicing and the folding-layers work, and it is
+  # what the FreeCAD fork's BIM importer is developed against. The
+  # version is the fork's own VERSION file (0.9.0alpha0 -- a v0.9.0
+  # development branch, not 0.8.x), so ifcopenshell.version and the
+  # package version agree.
+  version: "0.9.0alpha0"
+  fork_rev: c62f57e0a3f15ea85ad785f7e3ffcc546f9b1c88
+  build: 0
   python_min: "3.10"
 
 recipe:
@@ -8,14 +15,15 @@ recipe:
   version: ${{ version }}
 
 source:
-  - url: https://github.com/IfcOpenShell/IfcOpenShell/archive/refs/tags/ifcopenshell-python-${{ version }}.tar.gz
-    sha256: 185b97d79c800603685c60abd1497df242050dbb117dcaccbaebdec0cdf25dd5
-    patches:
-      - patches/Update_ZSTD_linking_logic.patch
-      - patches/Fix_boost_1.90_compatibility.patch
-      - patches/8141-Fix-CGAL-6.x-Point_d-comparator.patch
-      - patches/Fix_occt_8.0.0_compatibility.patch
-      - patches/fix-sweep-offset-sign.patch
+  # No patches. All five this recipe carried are already in the fork:
+  # the sweep-sign fix is in its history (git apply -R confirms it),
+  # and the ZSTD/boost 1.90/CGAL 6/OCCT 8 fixes came with the v0.9.0
+  # development line the fork is based on -- ifcopenshell master was
+  # measured building against our OCCT 8.0.1 with zero patches. The
+  # patch files stay in recipe/patches for the 0.8.5 source they were
+  # written for.
+  - url: https://github.com/realthunder/IfcOpenShell/archive/${{ fork_rev }}.tar.gz
+    sha256: 358d5251f9db3454c206dbf43d5b378593434240a3aab3fbe8196e58ad0ae9a5
 
   - url: https://github.com/IfcOpenShell/files/archive/20a17fcf3b1be2bc48af0273f7604af5b7cc4068.tar.gz
     target_directory: test/input
