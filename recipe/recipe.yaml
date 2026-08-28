@@ -15,15 +15,23 @@ recipe:
   version: ${{ version }}
 
 source:
-  # No patches. All five this recipe carried are already in the fork:
-  # the sweep-sign fix is in its history (git apply -R confirms it),
-  # and the ZSTD/boost 1.90/CGAL 6/OCCT 8 fixes came with the v0.9.0
-  # development line the fork is based on -- ifcopenshell master was
-  # measured building against our OCCT 8.0.1 with zero patches. The
-  # patch files stay in recipe/patches for the 0.8.5 source they were
-  # written for.
+  # None of the five patches written for 0.8.5 apply here: the
+  # sweep-sign fix is in the fork's own history, and the CGAL 6 and
+  # OCCT 8 fixes came with the v0.9.0 line (checked line by line, not
+  # assumed -- what each patch deletes is gone from these files). The
+  # boost 1.90 patch is not needed either: this source already drops
+  # `system` from BOOST_COMPONENTS, and CMake resolves Boost here with
+  # CMP0167 left alone. They stay in recipe/patches for the 0.8.5
+  # source they were written for.
+  #
+  # The one that IS still needed had moved rather than landed: the
+  # fork links zstd from its two consumers instead of the RocksDB
+  # interface target, and both hard-code the static target conda-forge
+  # does not export.
   - url: https://github.com/realthunder/IfcOpenShell/archive/${{ fork_rev }}.tar.gz
     sha256: 358d5251f9db3454c206dbf43d5b378593434240a3aab3fbe8196e58ad0ae9a5
+    patches:
+      - patches/fix-zstd-target-in-fork.patch
 
   - url: https://github.com/IfcOpenShell/files/archive/20a17fcf3b1be2bc48af0273f7604af5b7cc4068.tar.gz
     target_directory: test/input
