@@ -24,14 +24,21 @@ source:
   # CMP0167 left alone. They stay in recipe/patches for the 0.8.5
   # source they were written for.
   #
-  # Three fixes the packaged builds turned up now live in the fork
-  # itself, verified present in this exact tarball rather than assumed:
-  # zstd linked through whichever target the config exports, and libarea's public header
-  # defines NONE (and PI, CW, LINEAR...), which made rocksdb's
-  # "NONE = 0" enumerator read as "0 = 0" as soon as the build found
-  # libarea, and the SWIG interface called Python 2's PyInt_AsLong /
-  # PyInt_FromLong, which current SWIG no longer papers over. Neither
-  # is packaging-specific, so neither belongs in a patch here.
+  # Three fixes the packaged builds turned up live in the fork itself,
+  # each verified present in THIS tarball rather than assumed from a
+  # commit having been pushed:
+  #
+  #   - zstd is linked through whichever target the config exports;
+  #     conda-forge's has no zstd::libzstd_static.
+  #   - libarea's installed header defines NONE (and PI, CW, LINEAR
+  #     and two dozen more), which made rocksdb's "NONE = 0"
+  #     enumerator read as "0 = 0" the moment the libarea dependency
+  #     below meant the build could find libarea.
+  #   - the SWIG interface called Python 2's PyInt_AsLong and
+  #     PyInt_FromLong, which current SWIG no longer papers over.
+  #
+  # None of the three is packaging-specific, so none belongs in a
+  # patch here.
   - url: https://github.com/realthunder/IfcOpenShell/archive/${{ fork_rev }}.tar.gz
     sha256: 104407d39504f6be8e76f4d8f0aced146442b305f05275b4c4a36dc7929d9d4a
 
