@@ -6,8 +6,8 @@ context:
   # development branch, not 0.8.x), so ifcopenshell.version and the
   # package version agree.
   version: "0.9.0alpha0"
-  fork_rev: 1935f77b7e30f4a478ea3da2f2d31aebd74dd1c3
-  build: 3
+  fork_rev: ffb6266ab4ce52de10ac183870db993f702284f7
+  build: 4
   python_min: "3.10"
 
 recipe:
@@ -35,12 +35,13 @@ source:
   #     enumerator read as "0 = 0" the moment the libarea dependency
   #     below meant the build could find libarea.
   #   - the SWIG interface called Python 2's PyInt_AsLong and
-  #     PyInt_FromLong, which current SWIG no longer papers over.
+  #     PyInt_FromLong, and SWIG's own SWIG_Python_str_FromChar shim,
+  #     none of which SWIG 4.5 emits any more.
   #
   # None of the three is packaging-specific, so none belongs in a
   # patch here.
   - url: https://github.com/realthunder/IfcOpenShell/archive/${{ fork_rev }}.tar.gz
-    sha256: 104407d39504f6be8e76f4d8f0aced146442b305f05275b4c4a36dc7929d9d4a
+    sha256: 93d36395c921183e37ce92c6bcb846556fe2b59d8e2e074a7128bdf62408b6d9
 
   - url: https://github.com/IfcOpenShell/files/archive/20a17fcf3b1be2bc48af0273f7604af5b7cc4068.tar.gz
     target_directory: test/input
