@@ -6,8 +6,8 @@ context:
   # development branch, not 0.8.x), so ifcopenshell.version and the
   # package version agree.
   version: "0.9.0alpha0"
-  fork_rev: ffb6266ab4ce52de10ac183870db993f702284f7
-  build: 5
+  fork_rev: c0041521030799f8e237569573869603502ca72a
+  build: 6
   python_min: "3.10"
 
 recipe:
@@ -41,7 +41,7 @@ source:
   # None of the three is packaging-specific, so none belongs in a
   # patch here.
   - url: https://github.com/realthunder/IfcOpenShell/archive/${{ fork_rev }}.tar.gz
-    sha256: 93d36395c921183e37ce92c6bcb846556fe2b59d8e2e074a7128bdf62408b6d9
+    sha256: cb66317c51057e2f7de64c217c59b1eefa94d924c08b97e632e2f9c2e52fc738
 
   # Moved off the pin 0.8.5 wanted: this source's test_shape_stats.py
   # reads test/input/tests/data.csv at import time, and the whole
@@ -170,6 +170,10 @@ outputs:
           run:
             - occt * *novtk*  # Ensure that even though compiled against OCCT with VTK, it can still run with OCCT without VTK
             - pytest
+            # ifcopenshell.express imports pyparsing at module scope
+            # (bootstrap.py), so the three express aggregate-bounds
+            # tests error out on collection without it.
+            - pyparsing
             - python-dateutil
             - xmlschema
             - xsdata
