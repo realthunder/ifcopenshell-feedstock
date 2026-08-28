@@ -7,7 +7,7 @@ context:
   # package version agree.
   version: "0.9.0alpha0"
   fork_rev: ffb6266ab4ce52de10ac183870db993f702284f7
-  build: 4
+  build: 5
   python_min: "3.10"
 
 recipe:
@@ -43,9 +43,15 @@ source:
   - url: https://github.com/realthunder/IfcOpenShell/archive/${{ fork_rev }}.tar.gz
     sha256: 93d36395c921183e37ce92c6bcb846556fe2b59d8e2e074a7128bdf62408b6d9
 
-  - url: https://github.com/IfcOpenShell/files/archive/20a17fcf3b1be2bc48af0273f7604af5b7cc4068.tar.gz
+  # Moved off the pin 0.8.5 wanted: this source's test_shape_stats.py
+  # reads test/input/tests/data.csv at import time, and the whole
+  # tests/ directory is absent from that archive, so pytest failed
+  # during COLLECTION and the entire suite never ran. The newer commit
+  # is a strict superset -- 278 files against 273, nothing dropped --
+  # checked before moving rather than after.
+  - url: https://github.com/IfcOpenShell/files/archive/9fc2267d7f1ff35284c5b0fc28cc97bff7ace8e7.tar.gz
     target_directory: test/input
-    sha256: 668d1849f790075fcbe46669d5c1fc6e9339a6b3bb78f08e0aa4479289f93b70
+    sha256: 752a1490e3d4f65c9ef0a21c7fe41a1bd93d10382c07670d2ca335341f61d603
 
   - url: https://github.com/opensourceBIM/python-mvdxml/archive/83c12fa494b9d6a5a370d8525dc1f76aa5c89d8d.tar.gz
     target_directory: src/ifcopenshell-python/ifcopenshell/mvd
@@ -153,6 +159,11 @@ outputs:
         files:
           source:
             - src/ifcopenshell-python/test/
+            # test_shape_stats, test_open and test_write all reach up
+            # to <root>/test/input for their models; without this the
+            # directory simply is not there in the test environment,
+            # whatever the source archive contains.
+            - test/input/
           recipe:
             - pytest.ini
         requirements:
