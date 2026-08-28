@@ -7,7 +7,7 @@ context:
   # package version agree.
   version: "0.9.0alpha0"
   fork_rev: c62f57e0a3f15ea85ad785f7e3ffcc546f9b1c88
-  build: 0
+  build: 1
   python_min: "3.10"
 
 recipe:
@@ -90,6 +90,21 @@ outputs:
         - zlib
         - rocksdb <10.7.5   # Newer versions require c++20
         - zstd
+        # The fork's planar subtraction goes through libarea (Clipper
+        # with arcs surviving the round trip) instead of the boolean
+        # kernel, which is what took a King wall from 16.9s to 2.06s.
+        # find_package(libarea CONFIG) is QUIET and optional, so
+        # without this the build silently says "libarea not found,
+        # planar subtraction will use the boolean kernel" and ships
+        # the slow path. run_exports on the package carries the
+        # runtime dependency, so host alone is right.
+        #
+        # Not published for linux-aarch64 (0.3.1 is there for
+        # linux-64, osx-64, osx-arm64 and win-64), and the dep is
+        # optional by construction, so that variant keeps the boolean
+        # kernel rather than becoming unsolvable.
+        - if: target_platform != "linux-aarch64"
+          then: libarea
       run:
         - python
         - shapely
