@@ -6,8 +6,8 @@ context:
   # development branch, not 0.8.x), so ifcopenshell.version and the
   # package version agree.
   version: "0.9.0alpha0"
-  fork_rev: a4cd1642280e4de65317f4f25982debf7a19c3f3
-  build: 8
+  fork_rev: 0dc561db2269d4751f5a37ab7b2f1d67a671aeff
+  build: 9
   python_min: "3.10"
 
 recipe:
@@ -40,8 +40,17 @@ source:
   #
   # None of the three is packaging-specific, so none belongs in a
   # patch here.
+  #
+  # Build 8 shipped a fourth: the install plugin directory literal in
+  # libifcopenshell.plugin kept its compile-time length after conda
+  # relocated (shortened and NUL-padded) it, so with no search path
+  # configured every plug-in candidate truncated to "<prefix>/lib" at
+  # dlopen(), and ifcopenshell.file(schema=...) died on "Is a
+  # directory".  The fork measures the literal at run time now
+  # (0dc561db2); a package built from this rev needs no seeded search
+  # path.
   - url: https://github.com/realthunder/IfcOpenShell/archive/${{ fork_rev }}.tar.gz
-    sha256: a56a7fa6f079d846fde4bff91bfe609244d973b9a41ad2e3baab67371d8de6ab
+    sha256: 85e204d3403a036d6228133f1e21ea4c93e7b419730cc315769db467474ad58d
 
   # Moved off the pin 0.8.5 wanted: this source's test_shape_stats.py
   # reads test/input/tests/data.csv at import time, and the whole
