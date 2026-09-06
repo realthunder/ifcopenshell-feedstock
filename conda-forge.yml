@@ -1,8 +1,3 @@
-azure:
-  free_disk_space: true
-  max_parallel: 25
-  settings_linux:
-    swapfile_size: 10GiB
 build_platform:
   linux_aarch64: linux_64
   osx_arm64: osx_64
@@ -16,5 +11,11 @@ github:
   branch_name: main
   tooling_branch_name: main
 provider:
-  win: azure
+  # osx and win are what freecad-rt ships on, so they build here rather
+  # than on the Azure setup this fork does not have.
+  linux_64: github_actions
+  linux_aarch64: github_actions
+  osx_64: github_actions
+  osx_arm64: github_actions
+  win_64: github_actions
 test: native_and_emulated
