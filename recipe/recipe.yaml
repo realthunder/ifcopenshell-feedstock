@@ -6,7 +6,7 @@ context:
   # development branch, not 0.8.x), so ifcopenshell.version and the
   # package version agree.
   version: "0.9.0alpha0"
-  fork_rev: 0dc561db2269d4751f5a37ab7b2f1d67a671aeff
+  fork_rev: dc04c32b29bf335b6ba9f1916a48edb40b3d03c8
   build: 11
   python_min: "3.10"
 
@@ -50,7 +50,7 @@ source:
   # (0dc561db2); a package built from this rev needs no seeded search
   # path.
   - url: https://github.com/realthunder/IfcOpenShell/archive/${{ fork_rev }}.tar.gz
-    sha256: 85e204d3403a036d6228133f1e21ea4c93e7b419730cc315769db467474ad58d
+    sha256: daa0503a0442fceda1f6a217e23b458279242b9ad4a4f9904b4fc16ae7f970ee
 
   # Moved off the pin 0.8.5 wanted: this source's test_shape_stats.py
   # reads test/input/tests/data.csv at import time, and the whole
