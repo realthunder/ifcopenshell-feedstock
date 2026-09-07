@@ -7,7 +7,7 @@ context:
   # package version agree.
   version: "0.9.0alpha0"
   fork_rev: 0dc561db2269d4751f5a37ab7b2f1d67a671aeff
-  build: 10
+  build: 11
   python_min: "3.10"
 
 recipe:
@@ -230,6 +230,30 @@ outputs:
             - pytest
             - python
             - ifcopenshell
+    about:
+      license: LGPL-3.0-or-later
+      license_file: COPYING
+      summary: Python client library for the BIM Collaboration Format (BCF)
+      description: |
+        bcf-client
+        ==========
+
+        A Python implementation of the BIM Collaboration Format (BCF), the
+        openBIM standard for exchanging issues, comments and viewpoints
+        between BIM applications.
+
+        It covers the BCF-XML file format and the BCF API. bcf-client is
+        developed and released as part of the IfcOpenShell project, from
+        the src/bcf directory of that source tree, and is versioned and
+        built together with the ifcopenshell package.
+
+        For more information, see:
+
+        * [BCF standard](https://technical.buildingsmart.org/standards/bcf/)
+        * [bcf-client source](https://github.com/IfcOpenShell/IfcOpenShell/tree/master/src/bcf)
+      homepage: https://ifcopenshell.org
+      repository: https://github.com/IfcOpenShell/IfcOpenShell
+      documentation: https://ifcopenshell.org/
 
 
 about:
