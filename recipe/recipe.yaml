@@ -7,7 +7,7 @@ context:
   # package version agree.
   version: "0.9.0alpha0"
   fork_rev: dc04c32b29bf335b6ba9f1916a48edb40b3d03c8
-  build: 11
+  build: 12
   python_min: "3.10"
 
 recipe:
@@ -124,12 +124,26 @@ outputs:
         # the slow path. run_exports on the package carries the
         # runtime dependency, so host alone is right.
         #
-        # Not published for linux-aarch64 (0.3.1 is there for
-        # linux-64, osx-64, osx-arm64 and win-64), and the dep is
-        # optional by construction, so that variant keeps the boolean
-        # kernel rather than becoming unsolvable.
-        - if: target_platform != "linux-aarch64"
-          then: libarea
+        # Unconditional since 2026-09-07. It used to be skipped on
+        # linux-aarch64, which had no libarea at all: that variant was
+        # listed in .ci_support but never entered libarea-feedstock's
+        # workflow matrix, because conda-forge.yml gave it no provider
+        # entry and smithy defaulted it to an Azure setup this fork
+        # does not have -- the same defect fixed here in edc6572.
+        # Since the dep is optional by construction the build stayed
+        # solvable, so nothing failed; aarch64 just silently shipped
+        # the slow boolean kernel, i.e. the 16.9s path above rather
+        # than the 2.06s one. libarea-feedstock 6217b76 fixed the
+        # matrix and 0.3.2 is now published for all five subdirs.
+        #
+        # Floored at 0.3.2 deliberately. 0.3.1 built area.dll with
+        # WINDOWS_EXPORT_ALL_SYMBOLS, which exports every method of
+        # CArea but no static DATA member, so m_accuracy, m_units,
+        # m_fit_arcs, m_fit_circles, m_clipper_simple and
+        # m_clipper_clean_distance are absent from the export table
+        # and the win-64 link fails. Without the floor a solver is
+        # free to pick 0.3.1 again and reintroduce exactly that.
+        - libarea >=0.3.2
       run:
         - python
         - shapely
