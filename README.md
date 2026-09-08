@@ -3,6 +3,40 @@ About bcf-client-feedstock
 
 Feedstock license: [BSD-3-Clause](https://github.com/realthunder/ifcopenshell-feedstock/blob/main/LICENSE.txt)
 
+
+About bcf-client
+----------------
+
+Home: https://ifcopenshell.org/
+
+Package license: LGPL-3.0-or-later
+
+Summary: Python client library for the BIM Collaboration Format (BCF)
+
+Development: https://github.com/IfcOpenShell/IfcOpenShell
+
+Documentation: https://ifcopenshell.org/
+
+bcf-client
+==========
+
+A Python implementation of the BIM Collaboration Format (BCF), the
+openBIM standard for exchanging issues, comments and viewpoints
+between BIM applications.
+
+It covers the BCF-XML file format and the BCF API. bcf-client is
+developed and released as part of the IfcOpenShell project, from
+the src/bcf directory of that source tree, and is versioned and
+built together with the ifcopenshell package.
+
+For more information, see:
+
+* [BCF standard](https://technical.buildingsmart.org/standards/bcf/)
+* [bcf-client source](https://github.com/IfcOpenShell/IfcOpenShell/tree/master/src/bcf)
+
+About ifcopenshell
+------------------
+
 Home: https://ifcopenshell.org/
 
 Package license: LGPL-3.0-or-later

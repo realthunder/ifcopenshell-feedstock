@@ -83,6 +83,15 @@ outputs:
       version: ${{ version }}
     build:
       number: ${{ build }}
+      # Only 3.13 for this dev cycle, matching freecad-rt-feedstock and
+      # pivy-feedstock. This is what shrinks the rendered matrix --
+      # conda-smithy takes python from the global pinning and ignores a
+      # python list in conda_build_config.yaml, but drops a variant the
+      # recipe skips. Four pythons x five platforms was 17 jobs for a
+      # heavy CGAL/OCCT build; this is five.
+      skip:
+        - match(python, "<3.13")
+        - match(python, ">=3.14")
       script:
         - if: win
           then: bld_ifcopenshell.bat
