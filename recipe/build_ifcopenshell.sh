@@ -6,7 +6,20 @@
 
 if [ "$(uname)" == "Darwin" ]; then
     export FSUFFIX=dylib
-    export LDFLAGS="$LDFLAGS -Wl,-flat_namespace,-undefined,suppress"
+    # No -flat_namespace here, deliberately. It used to be set together
+    # with -undefined,suppress, and that pair is what kept osx-64 from
+    # ever publishing 0.9.0alpha0: the suppress half lets an unresolved
+    # symbol link as a stub that aborts the moment it is called, and the
+    # flat half makes dyld bind by name across every loaded image rather
+    # than to the library a symbol was linked against. Together they turn
+    # a link error into "dyld: missing symbol called" at run time, which
+    # landed in the conda test as SIGABRT inside create_shape, during
+    # pytest COLLECTION (the alignment test calls the API at module
+    # scope), taking the whole suite down. osx-arm64 was unaffected --
+    # the binding differs by load order and architecture, which is
+    # exactly what makes a flat namespace unsafe rather than merely old.
+    # Verified on osx-64: with the two-level namespace everything links
+    # with no undefined symbols and the suite is 2365 passed, 28 skipped.
 elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
     export FSUFFIX=so
 fi
